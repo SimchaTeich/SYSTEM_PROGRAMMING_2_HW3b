@@ -1,2 +1,2 @@
 # SYSTEM_PROGRAMMING_2_HW3b
-part b
+source: https://github.com/cpp-exercises/Fraction_b
