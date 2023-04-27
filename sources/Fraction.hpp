@@ -44,8 +44,8 @@ namespace ariel
 
 
         // getters
-        int numerator() const;
-        int denominator() const;
+        int getNumerator() const;
+        int getDenominator() const;
 
 
         /*

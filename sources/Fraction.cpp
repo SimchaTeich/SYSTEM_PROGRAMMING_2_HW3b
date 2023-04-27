@@ -44,13 +44,13 @@ Fraction Fraction::fractionFromFloat(float value)
 }
 
 
-int Fraction::numerator() const
+int Fraction::getNumerator() const
 {
     return _numerator;   
 }
 
 
-int Fraction::denominator() const
+int Fraction::getDenominator() const
 {
     return _denominator;
 }
