@@ -14,6 +14,7 @@ namespace ariel
     private:
         int _numerator;
         int _denominator;
+        bool _isNegative;
 
 
         /*
@@ -41,6 +42,18 @@ namespace ariel
         input: the integers for numerator and denominator.
         */
         Fraction(const int& numerator, const int& denominator);
+        
+        /*
+        C'tor
+        input: fruction as a float...
+        */
+        Fraction(const float& num);
+
+        /*
+        C'tor
+        input: void
+        */
+        Fraction();
 
 
         // getters
@@ -128,13 +141,13 @@ namespace ariel
         overloading operator++
         */
         friend Fraction& operator++(Fraction& fraction);      // pre
-        friend Fraction& operator++(Fraction& fraction, int); // post
+        friend Fraction operator++(Fraction& fraction, int); // post
 
         /*
         overloading operator--
         */
         friend Fraction& operator--(Fraction& fraction);      // pre
-        friend Fraction& operator--(Fraction& fraction, int); // post
+        friend Fraction operator--(Fraction& fraction, int); // post
 
 
         /*

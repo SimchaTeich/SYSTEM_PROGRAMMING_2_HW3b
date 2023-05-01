@@ -9,25 +9,75 @@ Fraction::Fraction(const int& numerator, const int& denominator)
 {
     if(0 == denominator)
     {
-        throw "ERROR: denominator can't be zero!";
+        throw std::invalid_argument("ERROR: denominator can't be zero!");
     }
+
+    _isNegative = (numerator < 0 && denominator > 0) || (numerator >=0 && denominator < 0);
 
     _numerator = numerator;
     _denominator = denominator;
+
+    recude();
+}
+
+
+Fraction::Fraction(const float& num)
+{
+    Fraction fruction = Fraction::fractionFromFloat(num);
+
+    _isNegative = num < 0;
+    _numerator = fruction.getNumerator();
+    _denominator = fruction.getDenominator();
+    
+}
+
+
+Fraction::Fraction()
+{
+    Fraction fruction = Fraction::fractionFromFloat(0);
+    
+    _isNegative = false;
+    _numerator = fruction.getNumerator();
+    _denominator = fruction.getDenominator();
 }
 
 
 void Fraction::recude()
 {
-    int max = std::max(_numerator, _denominator);
-    int quotient = 0;
-
-    for(int i = 2; i <= max; i++)
+    if(_numerator == 0)
     {
-        while(_numerator % i == 0 && _denominator % i == 0)
+        _denominator = 1;
+        _isNegative = false;
+    }
+    
+    // just numerator will be negative.
+    if(_isNegative)
+    {
+        _numerator = -std::abs(_numerator);
+        _denominator = std::abs(_denominator);
+    }
+    else // no minus in numerator and denumerator
+    {
+        _numerator = std::abs(_numerator);
+        _denominator = std::abs(_denominator);
+    }
+    
+    if(std::abs(_numerator) == std::abs(_denominator))
+    {
+        _numerator = _isNegative ? -1 : 1;
+        _denominator = 1;
+    }
+    else
+    {
+        int min = std::min(std::abs(_numerator), std::abs(_denominator));
+
+        for(int i = 2; i <= min; i++)
         {
-            _numerator /= i;
-            _denominator /= i;
+            while(_numerator % i == 0 && _denominator % i == 0)
+            {
+                _numerator /= i;
+                _denominator /= i;
+            }
         }
     }
 }
@@ -135,7 +185,7 @@ Fraction ariel::operator/(const Fraction& frac1, const Fraction& frac2)
 {
     if(frac2._numerator == 0)
     {
-        throw "Error: can't divide by zero!";
+        throw std::runtime_error("Error: can't divide by zero!");
     }
 
     return frac1 * Fraction(frac2._denominator, frac2._numerator);
@@ -156,14 +206,11 @@ Fraction ariel::operator/(const float& value, const Fraction& fraction)
 
 bool ariel::operator==(const Fraction& frac1, const Fraction& frac2)
 {
-    Fraction reducedLeft(frac1._numerator, frac1._denominator);
-    reducedLeft.recude();
+    Fraction afterFloat1((double)frac1._numerator/frac1._denominator);
+    Fraction afterFloat2((double)frac2._numerator/frac2._denominator);
 
-    Fraction reducedRight(frac2._numerator, frac2._denominator);
-    reducedRight.recude();
-
-    return reducedLeft._numerator == reducedRight._numerator && 
-        reducedLeft._denominator == reducedRight._denominator;
+    return afterFloat1._numerator == afterFloat2._numerator &&
+        afterFloat1._denominator == afterFloat2._denominator;
 }
 
 
@@ -258,10 +305,11 @@ Fraction& ariel::operator++(Fraction& fraction)
 }
 
 
-Fraction& ariel::operator++(Fraction& fraction, int)
+Fraction ariel::operator++(Fraction& fraction, int)
 {
+   Fraction temp = fraction;
     fraction._numerator += fraction._denominator;
-    return fraction;
+    return temp;
 }
 
 
@@ -272,10 +320,11 @@ Fraction& ariel::operator--(Fraction& fraction)
 }
 
 
-Fraction& ariel::operator--(Fraction& fraction, int)
+Fraction ariel::operator--(Fraction& fraction, int)
 {
+    Fraction temp = fraction;
     fraction._numerator -= fraction._denominator;
-    return fraction;
+    return temp;
 }
 
 
@@ -287,5 +336,18 @@ ostream& ariel::operator<<(ostream& output, const Fraction& fraction)
 
 istream& ariel::operator>>(istream& input, Fraction& fraction)
 {
-    return input >> fraction._numerator >> fraction._denominator;
+    fraction._numerator = 0;
+    fraction._denominator = 0;
+    input >> fraction._numerator >> fraction._denominator;
+
+    if(fraction._denominator == 0)
+    {
+        throw std::runtime_error("Error: >> needs two parameters..");
+    }
+
+    fraction._isNegative = (fraction._numerator < 0 && fraction._denominator > 0) ||
+                           (fraction._numerator >= 0 && fraction._denominator < 0);
+    fraction.recude();
+
+    return input;
 }
