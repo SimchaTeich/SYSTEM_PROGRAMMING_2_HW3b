@@ -170,7 +170,7 @@ Fraction ariel::operator-(const float& value, const Fraction& fraction)
 
 Fraction ariel::operator*(const Fraction& frac1, const Fraction& frac2)
 {
-    //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
+    //https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers
     int n1 = frac1._numerator;
     int d1 = frac1._denominator;
     int n2 = frac2._numerator;
