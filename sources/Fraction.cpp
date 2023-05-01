@@ -1,6 +1,7 @@
 //https://www.learncpp.com/cpp-tutorial/overloading-the-arithmetic-operators-using-friend-functions/
 #include "Fraction.hpp"
 #include <limits.h>
+#include <algorithm> // For __gcd
 
 using namespace ariel;
 using std::endl;
@@ -70,16 +71,10 @@ void Fraction::recude()
     }
     else
     {
-        int min = std::min(std::abs(_numerator), std::abs(_denominator));
+        int gcd = std::__gcd(std::abs(_numerator), std::abs(_denominator));
+        _numerator /= gcd;
+        _denominator /= gcd;
 
-        for(int i = 2; i <= min; i++)
-        {
-            while(_numerator % i == 0 && _denominator % i == 0)
-            {
-                _numerator /= i;
-                _denominator /= i;
-            }
-        }
     }
 }
 
