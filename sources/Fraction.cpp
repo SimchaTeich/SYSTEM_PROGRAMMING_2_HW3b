@@ -1,5 +1,6 @@
 //https://www.learncpp.com/cpp-tutorial/overloading-the-arithmetic-operators-using-friend-functions/
 #include "Fraction.hpp"
+#include <limits.h>
 
 using namespace ariel;
 using std::endl;
@@ -108,6 +109,14 @@ int Fraction::getDenominator() const
 
 Fraction ariel::operator+(const Fraction& frac1, const Fraction& frac2)
 {
+    //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
+    double d1 = (double)frac1._numerator/frac1._denominator;
+    double d2 = (double)frac2._numerator/frac2._denominator;
+    if ((d2 > 0 && d1 > INT_MAX - d2) || (d2 < 0 && d1 < INT_MIN - d2))
+    {
+        throw std::overflow_error("Error: overflow in operator+");
+    }
+
     int newNumorator = frac1._numerator * frac2._denominator + frac2._numerator * frac1._denominator;
     int newDenominator = frac1._denominator * frac2._denominator;
     
@@ -133,6 +142,14 @@ Fraction ariel::operator+(const float& value, const Fraction& fraction)
 
 Fraction ariel::operator-(const Fraction& frac1, const Fraction& frac2)
 {
+    //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
+    double d1 = (double)frac1._numerator/frac1._denominator;
+    double d2 = (double)frac2._numerator/frac2._denominator;
+    if ((d2 < 0 && d1 > INT_MAX + d2) || (d2 > 0 && d1 < INT_MIN + d2))
+    {
+        throw std::overflow_error("Error: overflow in operator-");
+    }
+
     int newNumorator = frac1._numerator * frac2._denominator - frac2._numerator * frac1._denominator;
     int newDenominator = frac1._denominator * frac2._denominator;
     
@@ -158,6 +175,16 @@ Fraction ariel::operator-(const float& value, const Fraction& fraction)
 
 Fraction ariel::operator*(const Fraction& frac1, const Fraction& frac2)
 {
+    //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
+    int n1 = frac1._numerator;
+    int d1 = frac1._denominator;
+    int n2 = frac2._numerator;
+    int d2 = frac2._denominator; 
+    if((n1 != 0 && n1*n2 / n1 != n2) || (d1 != 0 && d1*d2 / d1 != d2))
+    {
+        throw std::overflow_error("Error: overflow in operator*");
+    }
+
     int newNumorator = frac1._numerator * frac2._numerator;
     int newDenominator = frac1._denominator * frac2._denominator;
     
