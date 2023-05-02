@@ -7,6 +7,7 @@ using namespace ariel;
 using std::endl;
 
 
+/******************** CONSTRACTORS ******************/
 Fraction::Fraction(const int& numerator, const int& denominator)
 {
     if(0 == denominator)
@@ -22,7 +23,6 @@ Fraction::Fraction(const int& numerator, const int& denominator)
     recude();
 }
 
-
 Fraction::Fraction(const float& num)
 {
     Fraction fruction = Fraction::fractionFromFloat(num);
@@ -33,7 +33,6 @@ Fraction::Fraction(const float& num)
     
 }
 
-
 Fraction::Fraction()
 {
     Fraction fruction = Fraction::fractionFromFloat(0);
@@ -42,6 +41,7 @@ Fraction::Fraction()
     _numerator = fruction.getNumerator();
     _denominator = fruction.getDenominator();
 }
+/****************************************************/
 
 
 void Fraction::recude()
@@ -52,7 +52,7 @@ void Fraction::recude()
         _isNegative = false;
     }
     
-    // just numerator will be negative.
+    //just numerator will be negative.
     if(_isNegative)
     {
         _numerator = -std::abs(_numerator);
@@ -64,6 +64,7 @@ void Fraction::recude()
         _denominator = std::abs(_denominator);
     }
     
+    // reduce
     if(std::abs(_numerator) == std::abs(_denominator))
     {
         _numerator = _isNegative ? -1 : 1;
@@ -74,7 +75,6 @@ void Fraction::recude()
         int gcd = std::__gcd(std::abs(_numerator), std::abs(_denominator));
         _numerator /= gcd;
         _denominator /= gcd;
-
     }
 }
 
@@ -90,18 +90,21 @@ Fraction Fraction::fractionFromFloat(float value)
 }
 
 
+/*******************   GETTERS   *******************/
 int Fraction::getNumerator() const
 {
     return _numerator;   
 }
 
-
 int Fraction::getDenominator() const
 {
     return _denominator;
 }
+/****************************************************/
 
 
+
+/******************** operator+ *********************/
 Fraction ariel::operator+(const Fraction& frac1, const Fraction& frac2)
 {
     //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
@@ -122,19 +125,20 @@ Fraction ariel::operator+(const Fraction& frac1, const Fraction& frac2)
     return newFraction;
 }
 
-
 Fraction ariel::operator+(const Fraction& fraction, const float& value)
 {
     return fraction + Fraction::fractionFromFloat(value);
 }
 
-
 Fraction ariel::operator+(const float& value, const Fraction& fraction)
 {
     return  fraction + value;
 }
+/****************************************************/
 
 
+
+/******************** operator- *********************/
 Fraction ariel::operator-(const Fraction& frac1, const Fraction& frac2)
 {
     //https://stackoverflow.com/questions/199333/how-do-i-detect-unsigned-integer-overflow
@@ -155,19 +159,20 @@ Fraction ariel::operator-(const Fraction& frac1, const Fraction& frac2)
     return newFraction;
 }
 
-
 Fraction ariel::operator-(const Fraction& fraction, const float& value)
 {
     return fraction - Fraction::fractionFromFloat(value);
 }
 
-
 Fraction ariel::operator-(const float& value, const Fraction& fraction)
 {
     return  Fraction::fractionFromFloat(value) - fraction;
 }
+/****************************************************/
 
 
+
+/******************** operator* *********************/
 Fraction ariel::operator*(const Fraction& frac1, const Fraction& frac2)
 {
     //https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers
@@ -180,8 +185,8 @@ Fraction ariel::operator*(const Fraction& frac1, const Fraction& frac2)
         throw std::overflow_error("Error: overflow in operator*");
     }
 
-    int newNumorator = frac1._numerator * frac2._numerator;
-    int newDenominator = frac1._denominator * frac2._denominator;
+    int newNumorator = n1 * n2;
+    int newDenominator = d1 * d2;
     
     // create the reduced form
     Fraction newFraction(newNumorator, newDenominator);
@@ -190,19 +195,20 @@ Fraction ariel::operator*(const Fraction& frac1, const Fraction& frac2)
     return newFraction;
 }
 
-
 Fraction ariel::operator*(const Fraction& fraction, const float& value)
 {
     return fraction * Fraction::fractionFromFloat(value);
 }
 
-
 Fraction ariel::operator*(const float& value, const Fraction& fraction)
 {
     return  fraction * value;
 }
+/****************************************************/
 
 
+
+/******************** operator/ *********************/
 Fraction ariel::operator/(const Fraction& frac1, const Fraction& frac2)
 {
     if(frac2._numerator == 0)
@@ -213,119 +219,122 @@ Fraction ariel::operator/(const Fraction& frac1, const Fraction& frac2)
     return frac1 * Fraction(frac2._denominator, frac2._numerator);
 }
 
-
 Fraction ariel::operator/(const Fraction& fraction, const float& value)
 {
     return fraction / Fraction::fractionFromFloat(value);
 }
 
-
 Fraction ariel::operator/(const float& value, const Fraction& fraction)
 {
     return  Fraction::fractionFromFloat(value) / fraction;
 }
+/****************************************************/
 
 
+
+/******************* operator== *********************/
 bool ariel::operator==(const Fraction& frac1, const Fraction& frac2)
 {
-    Fraction afterFloat1((double)frac1._numerator/frac1._denominator);
-    Fraction afterFloat2((double)frac2._numerator/frac2._denominator);
+    Fraction afterFloat1((float)frac1._numerator/frac1._denominator);
+    Fraction afterFloat2((float)frac2._numerator/frac2._denominator);
 
     return afterFloat1._numerator == afterFloat2._numerator &&
         afterFloat1._denominator == afterFloat2._denominator;
 }
-
 
 bool ariel::operator==(const Fraction& fraction, const float& value)
 {
     return fraction == Fraction::fractionFromFloat(value);
 }
 
-
 bool ariel::operator==(const float& value, const Fraction& fraction)
 {
     return fraction == value;
 }
+/****************************************************/
 
 
+
+/******************** operator< *********************/
 bool ariel::operator<(const Fraction& frac1, const Fraction& frac2)
 {
      return frac1._numerator * frac2._denominator < frac1._denominator * frac2._numerator;
 }
-
 
 bool ariel::operator<(const Fraction& fraction, const float& value)
 {
      return fraction < Fraction::fractionFromFloat(value);
 }
 
-
 bool ariel::operator<(const float& value, const Fraction& fraction)
 {
      return Fraction::fractionFromFloat(value) < fraction;
 }
+/****************************************************/
 
 
+
+/******************** operator> *********************/
 bool ariel::operator>(const Fraction& frac1, const Fraction& frac2)
 {
      return frac1._numerator * frac2._denominator > frac1._denominator * frac2._numerator;
 }
-
 
 bool ariel::operator>(const Fraction& fraction, const float& value)
 {
      return fraction > Fraction::fractionFromFloat(value);
 }
 
-
 bool ariel::operator>(const float& value, const Fraction& fraction)
 {
      return Fraction::fractionFromFloat(value) > fraction;
 }
+/****************************************************/
 
 
+/******************* operator<= *********************/
 bool ariel::operator<=(const Fraction& frac1, const Fraction& frac2)
 {
     return frac1 < frac2 || frac1 == frac2;
 }
-
 
 bool ariel::operator<=(const Fraction& fraction, const float& value)
 {
     return fraction <= Fraction::fractionFromFloat(value);
 }
 
-
 bool ariel::operator<=(const float& value, const Fraction& fraction)
 {
     return Fraction::fractionFromFloat(value) <= fraction;
 }
+/****************************************************/
 
 
+/******************* operator>= *********************/
 bool ariel::operator>=(const Fraction& frac1, const Fraction& frac2)
 {
     return frac1 > frac2 || frac1 == frac2;
 }
-
 
 bool ariel::operator>=(const Fraction& fraction, const float& value)
 {
     return fraction >= Fraction::fractionFromFloat(value);
 }
 
-
 bool ariel::operator>=(const float& value, const Fraction& fraction)
 {
     return Fraction::fractionFromFloat(value) >= fraction;
 }
+/****************************************************/
 
 
+
+/******************* operator++ *********************/
 Fraction& ariel::operator++(Fraction& fraction)
 {
     fraction._numerator += fraction._denominator;
     return fraction;
 }
-
 
 Fraction ariel::operator++(Fraction& fraction, int)
 {
@@ -333,14 +342,16 @@ Fraction ariel::operator++(Fraction& fraction, int)
     fraction._numerator += fraction._denominator;
     return temp;
 }
+/****************************************************/
 
 
+
+/******************* operator-- *********************/
 Fraction& ariel::operator--(Fraction& fraction)
 {
     fraction._numerator -= fraction._denominator;
     return fraction;
 }
-
 
 Fraction ariel::operator--(Fraction& fraction, int)
 {
@@ -348,14 +359,20 @@ Fraction ariel::operator--(Fraction& fraction, int)
     fraction._numerator -= fraction._denominator;
     return temp;
 }
+/****************************************************/
 
 
+
+/******************* operator<< *********************/
 ostream& ariel::operator<<(ostream& output, const Fraction& fraction)
 {
     return output << fraction._numerator << "/" << fraction._denominator;
 }
+/****************************************************/
 
 
+
+/******************* operator>> *********************/
 istream& ariel::operator>>(istream& input, Fraction& fraction)
 {
     fraction._numerator = 0;
@@ -373,3 +390,4 @@ istream& ariel::operator>>(istream& input, Fraction& fraction)
 
     return input;
 }
+/****************************************************/

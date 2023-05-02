@@ -137,11 +137,13 @@ namespace ariel
         friend bool operator>=(const Fraction& fraction, const float& value);
         friend bool operator>=(const float& value, const Fraction& fraction);
 
+
         /*
         overloading operator++
         */
         friend Fraction& operator++(Fraction& fraction);      // pre
         friend Fraction operator++(Fraction& fraction, int); // post
+
 
         /*
         overloading operator--
